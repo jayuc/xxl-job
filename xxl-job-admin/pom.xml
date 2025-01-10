@@ -69,6 +69,11 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<version>${mysql-connector-j.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.4</version>
+		</dependency>
 
 		<!-- xxl-job-core -->
 		<dependency>
