@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS xxl_job_group;
 CREATE TABLE xxl_job_group(
     id SERIAL NOT NULL,
-    app_name VARCHAR(64) NOT NULL,
-    title VARCHAR(12) NOT NULL,
+    app_name VARCHAR(128) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     address_type TINYINT NOT NULL DEFAULT  0,
     address_list VARCHAR(512),
     update_time timestamp,
@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS xxl_job_info;
 CREATE TABLE xxl_job_info(
     id SERIAL NOT NULL,
     job_group INT NOT NULL,
-    job_cron VARCHAR(128) NOT NULL,
+    job_cron VARCHAR(128),
     job_desc VARCHAR(255) NOT NULL,
     add_time timestamp,
     update_time timestamp,
@@ -34,7 +34,7 @@ CREATE TABLE xxl_job_info(
     glue_type VARCHAR(50) NOT NULL,
     glue_source TEXT,
     glue_remark VARCHAR(128),
-    glue_uptimestamp timestamp,
+    glue_updatetime timestamp,
     child_jobid VARCHAR(255),
     trigger_status TINYINT NOT NULL DEFAULT  0,
     trigger_last_time BIGINT NOT NULL DEFAULT  0,
@@ -59,7 +59,7 @@ COMMENT ON COLUMN xxl_job_info.executor_fail_retry_count IS '失败重试次数'
 COMMENT ON COLUMN xxl_job_info.glue_type IS 'GLUE类型';
 COMMENT ON COLUMN xxl_job_info.glue_source IS 'GLUE源代码';
 COMMENT ON COLUMN xxl_job_info.glue_remark IS 'GLUE备注';
-COMMENT ON COLUMN xxl_job_info.glue_uptimestamp IS 'GLUE更新时间';
+COMMENT ON COLUMN xxl_job_info.glue_updatetime IS 'GLUE更新时间';
 COMMENT ON COLUMN xxl_job_info.child_jobid IS '子任务ID，多个逗号分隔';
 COMMENT ON COLUMN xxl_job_info.trigger_status IS '调度状态：0-停止，1-运行';
 COMMENT ON COLUMN xxl_job_info.trigger_last_time IS '上次调度时间';
@@ -184,4 +184,9 @@ COMMENT ON COLUMN xxl_job_user.permission IS '权限：执行器ID列表，多�
 
 
 CREATE UNIQUE INDEX i_username ON xxl_job_user(username);
+
+INSERT INTO xxl_job_group(id, app_name, title, address_type, address_list, update_time) VALUES (1, 'xxl-job-executor-sample', '示例执行器', 0, NULL, '2018-11-03 22:21:31' );
+INSERT INTO xxl_job_info(id, job_group, job_desc, add_time, update_time, author, alarm_email, schedule_type, schedule_conf, misfire_strategy, executor_route_strategy, executor_handler, executor_param, executor_block_strategy, executor_timeout, executor_fail_retry_count, glue_type, glue_source, glue_remark, glue_updatetime, child_jobid) VALUES (1, 1, '测试任务1', '2018-11-03 22:21:31', '2018-11-03 22:21:31', 'XXL', '', 'CRON', '0 0 0 * * ? *', 'DO_NOTHING', 'FIRST', 'demoJobHandler', '', 'SERIAL_EXECUTION', 0, 0, 'BEAN', '', 'GLUE代码初始化', '2018-11-03 22:21:31', '');
+INSERT INTO xxl_job_user(id, username, password, role, permission) VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
+INSERT INTO xxl_job_lock ( lock_name) VALUES ( 'schedule_lock');
 
